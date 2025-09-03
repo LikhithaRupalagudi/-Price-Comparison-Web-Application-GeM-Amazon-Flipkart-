@@ -1,0 +1,21 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+import time
+
+def get_amazon_price(product):
+    options = Options()
+    options.add_argument("--headless")
+    driver = webdriver.Chrome(options=options)
+
+    try:
+        search_url = f"https://www.amazon.in/s?k={product.replace(' ', '+')}"
+        driver.get(search_url)
+        time.sleep(3)
+        price_element = driver.find_element(By.CSS_SELECTOR, "span.a-price-whole")
+        price = int(price_element.text.replace(",", "").strip())
+        return (price, search_url)
+    except:
+        return ("Not found", search_url)
+    finally:
+        driver.quit() 
